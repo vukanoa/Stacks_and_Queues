@@ -1,31 +1,29 @@
 #include "stack.h"
+#include "queue.h"
 
 int
 main()
 {
-	Stack stack(15);
+	Queue queue(5);
 
-	if (stack.empty())
-		std::cout << "\n\tStack is INDEED empty!\n";
+	if (queue.is_empty())
+		std::cout << "\n\tQueue is INDEED Empty!\n";
 	else
-		std::cout << "\n\tStack is NOT empty!\n";
+		std::cout << "\n\tQueue is NOT Empty!\n";
 
-	std::cout << "\n\tStack size: " << stack.size() << "\n";
-	stack.push(7);
-	stack.push(9);
-	stack.push(2);
-	stack.push(1);
-	stack.push(3);
-	stack.push(4);
-	std::cout << "\n\tStack size: " << stack.size() << "\n";
+	std::cout << "\n\t*** Pushing Elements ***\n";
+	queue.enqueue(5);
+	queue.enqueue(7);
+	queue.enqueue(1);
 
-	int top = stack.peek();
-	std::cout << "\n\tCurrently on the top of the stack: " << top << "\n";
+	std::cout << "\n\tFront: " << queue.front();
+	std::cout << "\n\tRear: " << queue.back() << "\n";
 
-	stack.pop();
+	queue.dequeue();
 
-	top = stack.peek();
-	std::cout << "\n\tCurrently on the top of the stack: " << top << "\n";
+	std::cout << "\n\tFront: " << queue.front();
+	std::cout << "\n\tRear: " << queue.back() << "\n";
+
 	std::cout << "\n";
 
 	return 0;
