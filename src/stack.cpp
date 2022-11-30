@@ -174,3 +174,188 @@ FixedMultiStack::top_index(int stack_number)
 
 	return offset + capacity - 1;
 }
+
+
+/* ------------------------------------------------------------------------- */
+
+class MultiStack{
+private:
+	class StackInfo{
+	public:
+		int start;
+		int size;
+		int capacity;
+
+		StackInfo(int start, int capacity)
+		{
+			this.start = start;
+			this.capacity = capacity;
+		}
+
+		bool is_within_stack_capacity(int index)
+		{
+			if (index < 0 || index >= values.length)
+				return false;
+
+			/* If Index wraps around, adjust it */
+			int contiguousIndex = index < start ? index + values.length : index;
+			int end = start + capacity;
+
+			return start <= contiguousIndex && contiguousIndex < end;
+		}
+
+		int last_capacity_index()
+		{
+			return adjust_index(start + capacity - 1);
+		}
+
+		int last_element_index()
+		{
+			return adjust_index(start + size - 1);
+		}
+
+		bool is_full()
+		{
+			return size == capacity;
+		}
+
+		bool is_empty()
+		{
+			return size == 0;
+		}
+
+	};
+
+	MultiStack(int number_of_stacks, int default_size)
+	{
+		/* Create metadata for all the stacks */
+		info = new StackInfo[number_of_stacks];
+
+		for (int i = 0; i < number_of_stacks; i++)
+			info[i] = new StackInfo(default_size * i, default_size);
+
+		values = new int[number_of_stacsk * default_size];
+	}
+
+	/* Push value onto stack num, shifting/expanding stacks as necessary */
+	void push(int stack_number, int value)
+	{
+		if (all_stacks_are_full())
+		{
+			std::cout << "\n\tException: All stacks are full!\n";
+			exit(-1);
+		}
+
+		/* If this stack is full, expand it */
+		StackInfo stack = info[stack_number];
+		if (stack.is_full())
+			expand(stack_number);
+
+		/*
+			Find the Index of the top element in the array + 1, and increment
+			the stack pointer
+		*/
+		stack.size++;
+		values[stack.last_element_index()] = value;
+	}
+
+	/* Remove value from stack */
+	int pop(int stack_number)
+	{
+		StackInfo stack = info[stack_number];
+		if (stack.is_empty())
+		{
+			std::cout << "\n\tException: Stack is Empty!\n";
+			exit(-1);
+		}
+
+		/* Remove last element */
+		int value = values[stack.last_element_index()];
+		values[stack.last_element_index()] = 0; // Clear item
+		stack.size--;
+
+		return value;
+	}
+
+	/* Get top element of stack */
+	int peek(int stack_number)
+	{
+		StackInfo stack = info[stack_number];
+
+		return values[stack.last_element_index()];
+	}
+
+	/* Returns true if all the stacks are full */
+	bool all_stacks_are_full()
+	{
+		return number_of_elements() == values.length;
+	}
+
+private:
+	StackInfo* info[];
+	int values[];
+
+	/*
+		Shift items in stack over by one element. If we have available capacity
+		then we'll end up shrinking the stack by one element. If we don't have
+		available capacity, then we'll need to shift the next stack over too 
+	*/
+	void shift(int stack_number)
+	{
+		std::cout << "\n\tShifting " << stack_number << "\n";
+		StackInfo stack = info[stack_number];
+
+		/*
+			If this stack is at its full capacity, then you need to move the
+			next stack over by one element. This stack can now claim the freed
+			index.
+		*/
+		if (stack.size >= stack.capacity)
+		{
+			int next_stack = (stack_number + 1) % info.length;
+			shift(next_stack);
+			stack.capacity++; // claim index that the next stack lost
+		}
+
+		/* Shift all elememnts in stack over by one */
+		int index = stack.last_capacity_index();
+
+		while (stack.is_within_stack_capacity(index))
+		{
+			values[index] = values[previous_index(index)];
+			index = previous_index(index);
+		}
+
+		/* Adjust the stack data */
+		values[stack.start] = 0; // Clear item
+		stack.start = next_index(stack.start); // Move start
+		stack.capacity--;
+	}
+
+	/* Expand stack by shifting over other stacks */
+	void expand(int stack_number)
+	{
+		shift((stack_number + 1) % info.length);
+		info[stack_number].capacity++;
+	}
+
+	/* Adjust index to be within the range of 0 -> length - 1 */
+	int adjust_index(int index)
+	{
+		int max = values.length;
+
+		return ((index % max) + max) % max;
+	}
+
+	/* Get index before this index, adjusted for wrap around */
+	int next_index(int index)
+	{
+		return adjust_index(index + 1);
+	}
+
+	/* Get index before this index, adjusted for wrap around */
+	int previous_index(int index)
+	{
+		return adjust_index(index - 1);
+	}
+};
