@@ -10,8 +10,8 @@ public:
 
 	void push (int data);
 	void pop  ();
-	bool empty();
 	int  size ();
+	bool empty();
 	int  peek ();
 
 private:
@@ -40,6 +40,39 @@ private:
 	int stack_capacity;
 	int *values;
 	int *capacities;
+};
+
+
+// Stack Min
+
+class Stack_Min{
+public:
+	Stack_Min();
+	Stack_Min(int capacity);
+
+	void push (int data);
+	void pop  ();
+	int  peek ();
+	int  size ();
+	bool empty();
+
+	void push_min (int data);
+	void pop_min  ();
+	bool empty_min();
+	int  min      ();
+
+	void print_stack();
+
+private:
+	int capacity;
+
+	int filled;
+	int top;
+	int* stack;
+
+	int filled_min;
+	int top_min;
+	int* stack_min;
 };
 
 

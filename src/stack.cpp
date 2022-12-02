@@ -134,8 +134,14 @@ FixedMultiStack::pop(int stack_number)
 	if (empty(stack_number))
 	{
 		std::cout << "\n\tStack number: " << stack_number << " is empty! Unable to pop!\n\n";
-		return;
+		exit(-1);
 	}
+
+	int top_ind = top_index(stack_number);
+	int value =	values[top_ind];
+	capacities[stack_number]--;
+
+	return value;
 }
 
 
@@ -145,7 +151,7 @@ FixedMultiStack::peek(int stack_number)
 	if (empty(stack_number))
 	{
 		std::cout << "\n\tStack number: " << stack_number << " is empty! Unable to pop!\n\n";
-		return;
+		exit(-1);
 	}
 
 	return values[top_index(stack_number)];
@@ -178,184 +184,332 @@ FixedMultiStack::top_index(int stack_number)
 
 /* ------------------------------------------------------------------------- */
 
-class MultiStack{
-private:
-	class StackInfo{
-	public:
-		int start;
-		int size;
-		int capacity;
+// class MultiStack{
+// private:
+// 		friend class StackInfo;
+// 	class StackInfo{
+// 	public:
+// 		int start;
+// 		int size;
+// 		int capacity;
+// 
+// 
+// 		StackInfo(int start, int capacity)
+// 		{
+// 			this.start = start;
+// 			this.capacity = capacity;
+// 		}
+// 
+// 		bool is_within_stack_capacity(int index)
+// 		{
+// 			if (index < 0 || index >= values.length)
+// 				return false;
+// 
+// 			/* If Index wraps around, adjust it */
+// 			int contiguousIndex = index < start ? index + values.length : index;
+// 			int end = start + capacity;
+// 
+// 			return start <= contiguousIndex && contiguousIndex < end;
+// 		}
+// 
+// 		int last_capacity_index()
+// 		{
+// 			return adjust_index(start + capacity - 1);
+// 		}
+// 
+// 		int last_element_index()
+// 		{
+// 			return adjust_index(start + size - 1);
+// 		}
+// 
+// 		bool is_full()
+// 		{
+// 			return size == capacity;
+// 		}
+// 
+// 		bool is_empty()
+// 		{
+// 			return size == 0;
+// 		}
+// 
+// 	};
+// 
+// 	MultiStack(int number_of_stacks, int default_size)
+// 	{
+// 		/* Create metadata for all the stacks */
+// 		info = new StackInfo[number_of_stacks];
+// 
+// 		for (int i = 0; i < number_of_stacks; i++)
+// 			info[i] = new StackInfo(default_size * i, default_size);
+// 
+// 		values = new int[number_of_stacsk * default_size];
+// 	}
+// 
+// 	/* Push value onto stack num, shifting/expanding stacks as necessary */
+// 	void push(int stack_number, int value)
+// 	{
+// 		if (all_stacks_are_full())
+// 		{
+// 			std::cout << "\n\tException: All stacks are full!\n";
+// 			exit(-1);
+// 		}
+// 
+// 		/* If this stack is full, expand it */
+// 		StackInfo stack = info[stack_number];
+// 		if (stack.is_full())
+// 			expand(stack_number);
+// 
+// 		/*
+// 			Find the Index of the top element in the array + 1, and increment
+// 			the stack pointer
+// 		*/
+// 		stack.size++;
+// 		values[stack.last_element_index()] = value;
+// 	}
+// 
+// 	/* Remove value from stack */
+// 	int pop(int stack_number)
+// 	{
+// 		StackInfo stack = info[stack_number];
+// 		if (stack.is_empty())
+// 		{
+// 			std::cout << "\n\tException: Stack is Empty!\n";
+// 			exit(-1);
+// 		}
+// 
+// 		/* Remove last element */
+// 		int value = values[stack.last_element_index()];
+// 		values[stack.last_element_index()] = 0; // Clear item
+// 		stack.size--;
+// 
+// 		return value;
+// 	}
+// 
+// 	/* Get top element of stack */
+// 	int peek(int stack_number)
+// 	{
+// 		StackInfo stack = info[stack_number];
+// 
+// 		return values[stack.last_element_index()];
+// 	}
+// 
+// 	/* Returns true if all the stacks are full */
+// 	bool all_stacks_are_full()
+// 	{
+// 		return number_of_elements() == values.length;
+// 	}
+// 
+// private:
+// 	MultiStack::StackInfo* info[];
+// 	int values[];
+// 
+// 	/*
+// 		Shift items in stack over by one element. If we have available capacity
+// 		then we'll end up shrinking the stack by one element. If we don't have
+// 		available capacity, then we'll need to shift the next stack over too 
+// 	*/
+// 	void shift(int stack_number)
+// 	{
+// 		std::cout << "\n\tShifting " << stack_number << "\n";
+// 		StackInfo stack = info[stack_number];
+// 
+// 		/*
+// 			If this stack is at its full capacity, then you need to move the
+// 			next stack over by one element. This stack can now claim the freed
+// 			index.
+// 		*/
+// 		if (stack.size >= stack.capacity)
+// 		{
+// 			int next_stack = (stack_number + 1) % info.length;
+// 			shift(next_stack);
+// 			stack.capacity++; // claim index that the next stack lost
+// 		}
+// 
+// 		/* Shift all elememnts in stack over by one */
+// 		int index = stack.last_capacity_index();
+// 
+// 		while (stack.is_within_stack_capacity(index))
+// 		{
+// 			values[index] = values[previous_index(index)];
+// 			index = previous_index(index);
+// 		}
+// 
+// 		/* Adjust the stack data */
+// 		values[stack.start] = 0; // Clear item
+// 		stack.start = next_index(stack.start); // Move start
+// 		stack.capacity--;
+// 	}
+// 
+// 	/* Expand stack by shifting over other stacks */
+// 	void expand(int stack_number)
+// 	{
+// 		shift((stack_number + 1) % info.length);
+// 		info[stack_number].capacity++;
+// 	}
+// 
+// 	/* Adjust index to be within the range of 0 -> length - 1 */
+// 	int adjust_index(int index)
+// 	{
+// 		int max = values.length;
+// 
+// 		return ((index % max) + max) % max;
+// 	}
+// 
+// 	/* Get index before this index, adjusted for wrap around */
+// 	int next_index(int index)
+// 	{
+// 		return adjust_index(index + 1);
+// 	}
+// 
+// 	/* Get index before this index, adjusted for wrap around */
+// 	int previous_index(int index)
+// 	{
+// 		return adjust_index(index - 1);
+// 	}
+// };
 
-		StackInfo(int start, int capacity)
-		{
-			this.start = start;
-			this.capacity = capacity;
-		}
 
-		bool is_within_stack_capacity(int index)
-		{
-			if (index < 0 || index >= values.length)
-				return false;
+Stack_Min::Stack_Min()
+{
+	filled = 0;
+	capacity = 10;
 
-			/* If Index wraps around, adjust it */
-			int contiguousIndex = index < start ? index + values.length : index;
-			int end = start + capacity;
+	stack     = new int[capacity];
+	stack_min = new int[capacity];
+}
 
-			return start <= contiguousIndex && contiguousIndex < end;
-		}
 
-		int last_capacity_index()
-		{
-			return adjust_index(start + capacity - 1);
-		}
+Stack_Min::Stack_Min(int capacity)
+	: capacity(capacity), filled(0), top(-1)
+{
+	stack     = new int[capacity];
+	stack_min = new int[capacity];
+}
 
-		int last_element_index()
-		{
-			return adjust_index(start + size - 1);
-		}
 
-		bool is_full()
-		{
-			return size == capacity;
-		}
-
-		bool is_empty()
-		{
-			return size == 0;
-		}
-
-	};
-
-	MultiStack(int number_of_stacks, int default_size)
+void
+Stack_Min::push(int data)
+{
+	if (top == capacity)
 	{
-		/* Create metadata for all the stacks */
-		info = new StackInfo[number_of_stacks];
-
-		for (int i = 0; i < number_of_stacks; i++)
-			info[i] = new StackInfo(default_size * i, default_size);
-
-		values = new int[number_of_stacsk * default_size];
+		std::cout << "\n\tStack is Full! Unable to push a new element!\n";
+		return;
 	}
 
-	/* Push value onto stack num, shifting/expanding stacks as necessary */
-	void push(int stack_number, int value)
+	stack[++top] = data;
+	filled++;
+
+	if (empty_min() || data < stack_min[top_min])
+		push_min(data);
+}
+
+
+void
+Stack_Min::pop()
+{
+	if (top < 0 || filled == 0)
 	{
-		if (all_stacks_are_full())
-		{
-			std::cout << "\n\tException: All stacks are full!\n";
-			exit(-1);
-		}
-
-		/* If this stack is full, expand it */
-		StackInfo stack = info[stack_number];
-		if (stack.is_full())
-			expand(stack_number);
-
-		/*
-			Find the Index of the top element in the array + 1, and increment
-			the stack pointer
-		*/
-		stack.size++;
-		values[stack.last_element_index()] = value;
+		std::cout << "\n\tStack is already empty! Unable to pop!\n";
+		return;
 	}
 
-	/* Remove value from stack */
-	int pop(int stack_number)
+	if (stack[top] == stack_min[top_min])
+		pop_min();
+
+	top--;
+	filled--;
+
+	std::cout << "\n\n\t\tPOP!\n";
+}
+
+
+int
+Stack_Min::peek()
+{
+	if (top < 0 || filled == 0)
 	{
-		StackInfo stack = info[stack_number];
-		if (stack.is_empty())
-		{
-			std::cout << "\n\tException: Stack is Empty!\n";
-			exit(-1);
-		}
-
-		/* Remove last element */
-		int value = values[stack.last_element_index()];
-		values[stack.last_element_index()] = 0; // Clear item
-		stack.size--;
-
-		return value;
+		std::cout << "\n\tStack is Empty! There is no \'top\' element!\n";
+		return -1;
 	}
 
-	/* Get top element of stack */
-	int peek(int stack_number)
-	{
-		StackInfo stack = info[stack_number];
+	return stack[top];
+}
 
-		return values[stack.last_element_index()];
+
+int
+Stack_Min::size()
+{
+	return filled;
+}
+
+
+bool
+Stack_Min::empty()
+{
+	return filled == 0;
+}
+
+
+void
+Stack_Min::push_min(int data)
+{
+	if (top_min == capacity)
+	{
+		std::cout << "\n\tStack of minimums is Full! Unable to push a new element!\n";
+		return;
 	}
 
-	/* Returns true if all the stacks are full */
-	bool all_stacks_are_full()
+	stack_min[++top_min] = data;
+	filled_min++;
+}
+
+
+void
+Stack_Min::pop_min()
+{
+	if (top_min < 0 || filled_min == 0)
 	{
-		return number_of_elements() == values.length;
+		std::cout << "\n\tStack of minimums is already empty! Unable to pop!\n";
+		return;
 	}
 
-private:
-	StackInfo* info[];
-	int values[];
+	top_min--;
+	filled_min--;
+}
 
-	/*
-		Shift items in stack over by one element. If we have available capacity
-		then we'll end up shrinking the stack by one element. If we don't have
-		available capacity, then we'll need to shift the next stack over too 
-	*/
-	void shift(int stack_number)
+
+bool
+Stack_Min::empty_min()
+{
+	return filled_min == 0;
+}
+
+
+int
+Stack_Min::min()
+{
+	if (empty())
 	{
-		std::cout << "\n\tShifting " << stack_number << "\n";
-		StackInfo stack = info[stack_number];
-
-		/*
-			If this stack is at its full capacity, then you need to move the
-			next stack over by one element. This stack can now claim the freed
-			index.
-		*/
-		if (stack.size >= stack.capacity)
-		{
-			int next_stack = (stack_number + 1) % info.length;
-			shift(next_stack);
-			stack.capacity++; // claim index that the next stack lost
-		}
-
-		/* Shift all elememnts in stack over by one */
-		int index = stack.last_capacity_index();
-
-		while (stack.is_within_stack_capacity(index))
-		{
-			values[index] = values[previous_index(index)];
-			index = previous_index(index);
-		}
-
-		/* Adjust the stack data */
-		values[stack.start] = 0; // Clear item
-		stack.start = next_index(stack.start); // Move start
-		stack.capacity--;
+		std::cout << "\n\tStack is Empty! There is no minimum! Exiting...\n\n";
+		exit(-1);
 	}
 
-	/* Expand stack by shifting over other stacks */
-	void expand(int stack_number)
+	return stack_min[top_min];
+}
+
+
+void
+Stack_Min::print_stack()
+{
+	if (filled == 0)
 	{
-		shift((stack_number + 1) % info.length);
-		info[stack_number].capacity++;
+		std::cout << "\n\t\tStack is Empty!";
+		return;
 	}
 
-	/* Adjust index to be within the range of 0 -> length - 1 */
-	int adjust_index(int index)
-	{
-		int max = values.length;
+	int i = filled;
 
-		return ((index % max) + max) % max;
-	}
-
-	/* Get index before this index, adjusted for wrap around */
-	int next_index(int index)
-	{
-		return adjust_index(index + 1);
-	}
-
-	/* Get index before this index, adjusted for wrap around */
-	int previous_index(int index)
-	{
-		return adjust_index(index - 1);
-	}
-};
+	std::cout << "\n\t top -> | " << stack[top - (filled - i--)] << " |";
+	while (i)
+		std::cout << "\n\t\t| " << stack[top - (filled - i--)] << " |";
+}
