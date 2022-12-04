@@ -19,7 +19,7 @@ Stack::Stack(int capacity)
 void
 Stack::push(int data)
 {
-	if (top == capacity)
+	if (top == capacity - 1)
 	{
 		std::cout << "\n\tStack is Full! Unable to push a new element!\n";
 		return;
@@ -368,6 +368,7 @@ FixedMultiStack::top_index(int stack_number)
 // 	}
 // };
 
+/* ------------------------------------------------------------------------- */
 
 Stack_Min::Stack_Min()
 {
@@ -390,7 +391,7 @@ Stack_Min::Stack_Min(int capacity)
 void
 Stack_Min::push(int data)
 {
-	if (top == capacity)
+	if (top == capacity - 1)
 	{
 		std::cout << "\n\tStack is Full! Unable to push a new element!\n";
 		return;
@@ -512,4 +513,155 @@ Stack_Min::print_stack()
 	std::cout << "\n\t top -> | " << stack[top - (filled - i--)] << " |";
 	while (i)
 		std::cout << "\n\t\t| " << stack[top - (filled - i--)] << " |";
+}
+
+
+/* ------------------------------------------------------------------------- */
+
+SetOfStacks::SetOfStacks()
+	: filled(0), top(-1), available_stack(0)
+{
+	capacity = 10;
+	stacks.push_back(new int[capacity]);
+}
+
+
+SetOfStacks::SetOfStacks(int capacity)
+	: capacity(capacity), filled(0), top(-1), available_stack(0)
+{
+	stacks.push_back(new int[capacity]);
+}
+
+
+void
+SetOfStacks::push(int data)
+{
+	if (top == capacity - 1)
+	{
+		stacks.push_back(new int[capacity]);
+		top = -1;
+		available_stack++;
+		filled = 0;
+	}
+
+	stacks[available_stack][++top] = data;
+	filled++;
+}
+
+
+void
+SetOfStacks::pop()
+{
+	if (top < 0 && available_stack == 0)
+	{
+		std::cout << "\n\tStacks are empty! Unable to pop!\n";
+		return;
+	}
+	else if (available_stack > 0 && filled == 1)
+	{
+		stacks.erase(stacks.end() - 1); // Remove the new Empty stack
+		available_stack--;
+
+		filled = capacity;
+		top    = capacity;
+	}
+
+	/* Special case if capacity = 1 */
+	/* Won't cover it here */
+
+	top--;
+	filled--;
+
+	std::cout << "\n\n\t\tPOP!\n";
+}
+
+
+bool
+SetOfStacks::empty()
+{
+	return available_stack && filled == 0;
+}
+
+
+int
+SetOfStacks::size()
+{
+	if (available_stack == 0)
+		return filled;
+
+	return available_stack * capacity + filled;
+}
+
+
+int
+SetOfStacks::peek()
+{
+	if (top < 0 && available_stack == 0)
+	{
+		std::cout << "\n\tStack is Empty! There is no \'top\' element!\n";
+		return -1;
+	}
+
+	return stacks[available_stack][top];
+}
+
+
+int
+SetOfStacks::used_stacks()
+{
+	return available_stack + 1;
+}
+
+
+void
+SetOfStacks::print_stacks()
+{
+	if (available_stack == 0 && filled == 0)
+	{
+		std::cout << "\n\t\tStacks are Empty!";
+		return;
+	}
+
+	std::cout << "\n";
+
+	int i = capacity - 1;
+	while (i >= 0)
+	{
+		int stack_num = 0;
+		while (stack_num <= available_stack)
+		{
+			if (stack_num == available_stack)
+			{
+				if (i < filled && i + 1 < filled)
+					std::cout << "\t| " << stacks[stack_num][top - (filled - i - 1)] << " |";
+				else if (i < filled && i + 1 == filled)
+					std::cout << "\t| " << stacks[stack_num][top - (filled - i - 1)] << " | <- top";
+			}
+			else
+			{
+				std::cout << "\t| " << stacks[stack_num][i] << " |";
+			}
+			stack_num++;
+		}
+		std::cout << "\n";
+		i--;
+	}
+}
+
+
+void
+SetOfStacks::pop_at(int index)
+{
+	std::cout << "\t\t*** POP AT INDEX: " << index << " ***\n";
+	int num_elements = size();
+
+	while (num_elements != index)
+	{
+		pop();
+		num_elements = size();
+	}
+
+	std::cout << "\n\tTOP: " << peek() << " (Index: " << index << ")\n\n";
+	std::cout << "\tFinally, we pop at required Index: " << index << "\n";
+	pop();
 }

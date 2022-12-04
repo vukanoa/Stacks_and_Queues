@@ -4,114 +4,107 @@
 int
 main()
 {
-	Stack_Min stack(15);
+	SetOfStacks stacks(5);
 
-	if (stack.empty())
-		std::cout << "\n\tStack is INDEED empty!\n";
+	if (stacks.empty())
+		std::cout << "\n\tStacks are INDEED empty!\n";
 	else
-		std::cout << "\n\tStack is NOT empty!\n";
+		std::cout << "\n\tStacks are NOT empty!\n";
 
-	std::cout << "\n\n\t================================";
-	std::cout << "\n\tVisual representation of Stack: \n";
-	stack.print_stack();
-	std::cout << "\n\t================================";
+	std::cout << "\n\tNumber of used stacks: " << stacks.used_stacks();
+	std::cout << "\n\tTotal Stack size: " << stacks.size();
+	/*
+		1 - 2
+		2 - 2
+		3 - 1
+		4 - 2
+		5 - 1
+		6 - 1
+		7 - 2
+		8 - 1
+		9 - 2
+	*/
+	stacks.push(3);
+	stacks.push(7);
+	stacks.push(2);
+	stacks.push(9);
+	stacks.push(1);
+	stacks.push(8);
+	stacks.push(4);
+	stacks.push(5);
+	stacks.push(2);
+	stacks.push(1);
+	stacks.push(4);
+	stacks.push(7);
+	stacks.push(9);
+	stacks.push(6);
+	std::cout << "\n\n\tNumber of used stacks: " << stacks.used_stacks();
+	std::cout << "\n\tTotal Stack size: " << stacks.size() << "\n";
 
-	std::cout << "\n\n\tStack size: " << stack.size();
-	stack.push(3);
-	stack.push(7);
-	stack.push(2);
-	stack.push(9);
-	stack.push(1);
-	stack.push(3);
-	stack.push(4);
-	std::cout << "\n\tStack size: " << stack.size() << "\n";
+	std::cout << "\n\t----------------------------------------------";
+	stacks.print_stacks();
+	std::cout << "\n";
+	for (int i = 0; i < stacks.used_stacks(); i++)
+	{
+		std::cout << "\tStk_" << i + 1;
+	}
+	std::cout << "\n\t----------------------------------------------\n\n";
 
-	std::cout << "\n\n\t================================";
-	std::cout << "\n\tVisual representation of Stack: \n";
-	stack.print_stack();
-	std::cout << "\n\t================================";
 
-	int top = stack.peek();
+
+
+	/* The whole problem was about this function */
+	stacks.pop_at(8);
+
+	std::cout << "\n\t----------------------------------------------";
+	stacks.print_stacks();
+	std::cout << "\n";
+	for (int i = 0; i < stacks.used_stacks(); i++)
+	{
+		std::cout << "\tStk_" << i + 1;
+	}
+	std::cout << "\n\t----------------------------------------------";
+
+	int top = stacks.peek();
 	std::cout << "\n\tCurrently on the top of the stack: " << top;
-	std::cout << "\n\tCurrent min: " << stack.min();
+	std::cout << "\n\tNumber of used stacks: " << stacks.used_stacks();
 
-	stack.pop();
 
-	std::cout << "\n\n\t================================";
-	std::cout << "\n\tVisual representation of Stack: \n";
-	stack.print_stack();
-	std::cout << "\n\t================================";
 
-	top = stack.peek();
+
+	stacks.pop();
+
+	std::cout << "\n\t----------------------------------------------";
+	stacks.print_stacks();
+	std::cout << "\n";
+	for (int i = 0; i < stacks.used_stacks(); i++)
+	{
+		std::cout << "\tStk_" << i + 1;
+	}
+	std::cout << "\n\t----------------------------------------------";
+
+	top = stacks.peek();
 	std::cout << "\n\tCurrently on the top of the stack: " << top;
-	std::cout << "\n\tCurrent min: " << stack.min();
+	std::cout << "\n\tNumber of used stacks: " << stacks.used_stacks();
 
-	stack.pop();
 
-	std::cout << "\n\n\t================================";
-	std::cout << "\n\tVisual representation of Stack: \n";
-	stack.print_stack();
-	std::cout << "\n\t================================";
 
-	top = stack.peek();
+
+	stacks.pop();
+
+	std::cout << "\n\t----------------------------------------------";
+	stacks.print_stacks();
+	std::cout << "\n";
+	for (int i = 0; i < stacks.used_stacks(); i++)
+	{
+		std::cout << "\tStk_" << i + 1;
+	}
+	std::cout << "\n\t----------------------------------------------";
+
+	top = stacks.peek();
 	std::cout << "\n\tCurrently on the top of the stack: " << top;
-	std::cout << "\n\tCurrent min: " << stack.min();
-
-	stack.pop();
-
-	std::cout << "\n\n\t================================";
-	std::cout << "\n\tVisual representation of Stack: \n";
-	stack.print_stack();
-	std::cout << "\n\t================================";
-
-	top = stack.peek();
-	std::cout << "\n\tCurrently on the top of the stack: " << top;
-	std::cout << "\n\tCurrent min: " << stack.min();
-
-	stack.pop();
-
-	std::cout << "\n\n\t================================";
-	std::cout << "\n\tVisual representation of Stack: \n";
-	stack.print_stack();
-	std::cout << "\n\t================================";
-
-	top = stack.peek();
-	std::cout << "\n\tCurrently on the top of the stack: " << top;
-	std::cout << "\n\tCurrent min: " << stack.min();
-
-	stack.pop();
-
-	std::cout << "\n\n\t================================";
-	std::cout << "\n\tVisual representation of Stack: \n";
-	stack.print_stack();
-	std::cout << "\n\t================================";
-
-	top = stack.peek();
-	std::cout << "\n\tCurrently on the top of the stack: " << top;
-	std::cout << "\n\tCurrent min: " << stack.min();
-
-	stack.pop();
-
-	std::cout << "\n\n\t================================";
-	std::cout << "\n\tVisual representation of Stack: \n";
-	stack.print_stack();
-	std::cout << "\n\t================================";
-
-	top = stack.peek();
-	std::cout << "\n\tCurrently on the top of the stack: " << top;
-	std::cout << "\n\tCurrent min: " << stack.min();
-
-	stack.pop();
-
-	std::cout << "\n\n\t================================";
-	std::cout << "\n\tVisual representation of Stack: \n";
-	stack.print_stack();
-	std::cout << "\n\t================================";
-
-	top = stack.peek();
-	std::cout << "\n\tCurrently on the top of the stack: " << top;
-	std::cout << "\n\tCurrent min: " << stack.min();
+	std::cout << "\n\tNumber of used stacks: " << stacks.used_stacks();
 	std::cout << "\n\n";
-
+	
 	return 0;
 }

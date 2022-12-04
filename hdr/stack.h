@@ -2,6 +2,7 @@
 #define _STACKS_H_
 
 #include <iostream>
+#include <vector>
 
 class Stack{
 public:
@@ -73,6 +74,36 @@ private:
 	int filled_min;
 	int top_min;
 	int* stack_min;
+};
+
+
+// Stack of Plates
+
+class SetOfStacks{
+public:
+	SetOfStacks();
+	SetOfStacks(int capacity);
+
+	void push (int data);
+	void pop  ();
+	int  size ();
+	bool empty();
+	int  peek ();
+	int  used_stacks ();
+	void print_stacks();
+	
+	/* 
+		We're told to implement this function.
+		Everything else is just so we can implement this.
+	*/
+	void pop_at(int index);
+
+private:
+	int capacity;
+	int filled;
+	int top;
+	int available_stack;
+	std::vector<int*>stacks;
 };
 
 
