@@ -1,4 +1,5 @@
 #include "stack.h"
+#include <climits>
 
 Stack::Stack()
 {
@@ -41,8 +42,6 @@ Stack::pop()
 
 	top--;
 	filled--;
-
-	std::cout << "\n\tPop!\n";
 }
 
 
@@ -70,6 +69,24 @@ Stack::peek()
 	}
 
 	return stack[top];
+}
+
+void
+Stack::print_stack()
+{
+	if (filled == 0)
+	{
+		std::cout << "\n\t\tStack is Empty!\n\n";
+		return;
+	}
+
+	int i = filled;
+
+	std::cout << "\n\t top -> | " << stack[top - (filled - i--)] << " |";
+	while (i)
+		std::cout << "\n\t\t| " << stack[top - (filled - i--)] << " |";
+	
+	std::cout << "\n\n";
 }
 
 /* ------------------------------------------------------------------------- */
@@ -664,4 +681,50 @@ SetOfStacks::pop_at(int index)
 	std::cout << "\n\tTOP: " << peek() << " (Index: " << index << ")\n\n";
 	std::cout << "\tFinally, we pop at required Index: " << index << "\n";
 	pop();
+}
+
+
+Stack*
+sort_stack(Stack* stack)
+{
+	std::cout << "\n\t*** SORTING A STACK USING 2 STACKS ***\n";
+
+	Stack* tmp_stack = new Stack();
+	int max = INT_MIN;
+	int sorted = 0;
+	int num_of_elements = stack->size();
+
+	while (sorted <= num_of_elements)
+	{
+		max = INT_MIN;
+
+		int x = 1;
+		while (!stack->empty())
+		{
+			if (stack->peek() > max && x >= sorted)
+				max = stack->peek();
+
+			x++;
+			int tmp = stack->peek();
+			stack->pop();
+			tmp_stack->push(tmp);
+		}
+
+		while (!tmp_stack->empty())
+		{
+			if (tmp_stack->peek() == max)
+				tmp_stack->pop();
+			else
+			{
+				int tmp = tmp_stack->peek();
+				tmp_stack->pop();
+				stack->push(tmp);
+			}
+		}
+
+		stack->push(max);
+		sorted++;
+	}
+
+	return stack;
 }

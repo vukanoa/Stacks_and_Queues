@@ -15,6 +15,8 @@ public:
 	bool empty();
 	int  peek ();
 
+	void print_stack();
+
 private:
 	int capacity;
 	int filled;
@@ -106,5 +108,9 @@ private:
 	std::vector<int*>stacks;
 };
 
+
+
+// Sort Stack
+Stack* sort_stack(Stack* stack);
 
 #endif // _STACKS_H_

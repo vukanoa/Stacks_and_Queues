@@ -4,66 +4,22 @@
 int
 main()
 {
-	MyQueue my_queue(4);
+	Stack stack;
 
-	if (my_queue.empty())
-		std::cout << "\n\tQueue is INDEED Empty!\n\n";
-	else
-		std::cout << "\n\tQueue is NOT Empty!\n\n";
-	
-	std::cout << "\n\tCurrent size of Queue: " << my_queue.size();
-	
-	my_queue.enqueue(1);
-	my_queue.enqueue(2);
-	my_queue.enqueue(3);
-	my_queue.enqueue(4);
+	stack.push(3);
+	stack.push(4);
+	stack.push(5);
+	stack.push(6);
+	stack.push(2);
+	stack.push(8);
+	stack.push(1);
 
-	std::cout << "\n\tCurrent size of Queue: " << my_queue.size();
-	std::cout << "\n\n";
+	stack.print_stack();
 
-	my_queue.print_queue();
-	std::cout << "\tSize: " << my_queue.size();
-	std::cout << "\n\tFront: " << my_queue.front();
-	std::cout << "\n\tBack: " << my_queue.back()  << "\n\n";
+	/* First solution */
+	sort_stack(&stack);
 
-	my_queue.dequeue();
-	my_queue.print_queue();
-	std::cout << "\tSize: " << my_queue.size() << "\n";
+	stack.print_stack();
 
-	my_queue.dequeue();
-	my_queue.print_queue();
-	std::cout << "\tSize: " << my_queue.size() << "\n";
-
-	my_queue.dequeue();
-	my_queue.print_queue();
-	std::cout << "\tSize: " << my_queue.size() << "\n";
-	
-	my_queue.dequeue();
-	my_queue.print_queue();
-	std::cout << "\tSize: " << my_queue.size() << "\n";
-
-	my_queue.enqueue(1);
-	my_queue.enqueue(2);
-
-	my_queue.print_queue();
-	std::cout << "\tSize: " << my_queue.size();
-	std::cout << "\n\tFront: " << my_queue.front();
-	std::cout << "\n\tBack: " << my_queue.back()  << "\n\n";
-	
-	my_queue.enqueue(4);
-	my_queue.enqueue(5);
-
-	my_queue.print_queue();
-	std::cout << "\tSize: " << my_queue.size();
-	std::cout << "\n\tFront: " << my_queue.front();
-	std::cout << "\n\tBack: " << my_queue.back()  << "\n\n";
-
-	my_queue.enqueue(6);
-
-	my_queue.print_queue();
-	std::cout << "\tSize: " << my_queue.size();
-	std::cout << "\n\tFront: " << my_queue.front();
-	std::cout << "\n\tBack: " << my_queue.back()  << "\n\n";
-	
 	return 0;
 }
