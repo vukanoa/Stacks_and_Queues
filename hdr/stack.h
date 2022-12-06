@@ -112,5 +112,6 @@ private:
 
 // Sort Stack
 Stack* sort_stack(Stack* stack);
+void   stack_sort(Stack* stack);
 
 #endif // _STACKS_H_

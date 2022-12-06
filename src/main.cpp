@@ -1,6 +1,7 @@
 #include "stack.h"
 #include "queue.h"
 
+
 int
 main()
 {
@@ -17,9 +18,13 @@ main()
 	stack.print_stack();
 
 	/* First solution */
-	sort_stack(&stack);
+	// sort_stack(&stack);
+
+	/* Second solution */
+	stack_sort(&stack);
 
 	stack.print_stack();
 
 	return 0;
 }
+

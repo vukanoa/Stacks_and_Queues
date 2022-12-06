@@ -728,3 +728,33 @@ sort_stack(Stack* stack)
 
 	return stack;
 }
+
+
+void
+stack_sort(Stack* stack)
+{
+	std::cout << "\n\t*** SORTING A STACK USING 2 STACKS ***\n";
+
+	Stack* tmp_stack = new Stack();
+
+	while (!stack->empty())
+	{
+		/* Insert each element from "stack" to "tmp_stack" in sorted order */
+		int tmp = stack->peek();
+		stack->pop();
+
+		while(!tmp_stack->empty() && tmp_stack->peek() > tmp)
+		{
+			stack->push(tmp_stack->peek());
+			tmp_stack->pop();
+		}
+		tmp_stack->push(tmp);
+	}
+
+	/* Copy the elements from tmp_stack back into "stack" */
+	while (!tmp_stack->empty())
+	{
+		stack->push(tmp_stack->peek());
+		tmp_stack->pop();
+	}
+}
