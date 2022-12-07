@@ -30,7 +30,6 @@ private:
 
 
 // Queue via Stacks
-
 class MyQueue{
 public:
 	MyQueue(int capacity = CAPACITY);
@@ -57,6 +56,46 @@ private:
 
 	bool stack_1_empty();
 	bool stack_2_empty();
+};
+
+
+
+// Definition for singly-linked list.
+struct Node {
+    bool dog;
+	double arrival;
+    Node *next;
+
+    Node() : dog(true), arrival(0), next(nullptr) {}
+    Node(bool dog) :dog(dog), arrival(0), next(nullptr) {}
+    Node(bool dog, Node *next) : dog(true), arrival(0), next(next) {}
+};
+
+// Animal Shelter
+class Queue_animal_shelter{
+public:
+	Queue_animal_shelter(int capacity = CAPACITY);
+	~Queue_animal_shelter();
+
+	void  enqueue    (Node* node);
+	Node* dequeue_any();
+	Node* dequeue_dog();
+	Node* dequeue_cat();
+
+	void  print_queue();
+
+	static double arrived;
+
+private:
+	Node* queue;
+
+	int capacity;
+	int filled;
+	Node *front_any;
+	Node *front_dog;
+	Node *front_cat;
+	Node *rear;
+
 };
 
 

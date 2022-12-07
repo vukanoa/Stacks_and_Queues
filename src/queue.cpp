@@ -265,3 +265,168 @@ MyQueue::stack_2_empty()
 {
 	return top_2 < 0;
 }
+
+/* ------------------------------------------------------------------------- */
+
+double Queue_animal_shelter::arrived = 1;
+
+// Constructor
+Queue_animal_shelter::Queue_animal_shelter(int capacity)
+	: capacity(capacity), filled(0),
+	  front_any(nullptr), front_dog(nullptr), front_cat(nullptr), rear(nullptr)
+{
+	queue = nullptr;
+	// opening_time = std::chrono::steady_clock::now();
+}
+
+// Destructor
+Queue_animal_shelter::~Queue_animal_shelter()
+{}
+
+void
+Queue_animal_shelter::enqueue(Node* node)
+{
+	node->arrival = Queue_animal_shelter::arrived++;
+
+	if (queue == nullptr)
+	{
+		queue = rear = node;
+		if (node->dog)
+			front_dog = node;
+		else
+			front_cat = node;
+
+		front_any = node;
+	}
+	else
+	{
+		rear->next = node;
+		rear = rear->next;
+
+		if (node->dog && front_dog == nullptr)
+			front_dog = node;
+		else if (!node->dog && front_cat == nullptr)
+			front_cat = node;
+	}
+
+}
+
+
+Node*
+Queue_animal_shelter::dequeue_any()
+{
+	if (queue != nullptr)
+	{
+		Node* ret = queue;
+		front_any = queue->next;
+		queue = queue->next;
+
+		Node* tmp = queue;
+		if (ret->dog)
+		{
+			while (!tmp->dog && tmp != nullptr)
+				tmp = tmp->next;
+
+			front_dog = tmp;
+		}
+		else
+		{
+			while (tmp->dog && tmp != nullptr)
+				tmp = tmp->next;
+
+			front_cat = tmp;
+		}
+
+		return ret;
+	}
+
+	return nullptr;
+}
+
+
+Node*
+Queue_animal_shelter::dequeue_dog()
+{
+	if (front_dog == nullptr)
+	{
+		std::cout << "\n\t\tThere is no Dog available in the Animal Shelter!\n\n";
+		return nullptr;
+	}
+	else
+	{
+		Node* ret = front_dog;
+		front_dog = front_dog->next;
+
+		while (front_dog != nullptr && !front_dog->dog)
+			front_dog = front_dog->next;
+
+		if (queue == ret)
+			queue = queue->next;
+		else
+		{
+			Node* tmp = queue;
+			while (tmp->next != ret)
+				tmp = tmp->next;
+
+			tmp->next = tmp->next->next;
+		}
+
+		return ret;
+	}
+}
+
+
+Node*
+Queue_animal_shelter::dequeue_cat()
+{
+	if (front_cat == nullptr)
+	{
+		std::cout << "\n\t\tThere is no Cat available in the Animal Shelter!\n\n";
+		return nullptr;
+	}
+	else
+	{
+		Node* ret = front_cat;
+		front_cat = front_cat->next;
+
+		while (front_cat != nullptr && front_cat->dog)
+			front_cat = front_cat->next;
+
+		if (queue == ret)
+			queue = queue->next;
+		else
+		{
+			Node* tmp = queue;
+			while (tmp->next != ret)
+				tmp = tmp->next;
+
+			tmp->next = tmp->next->next;
+		}
+
+		return ret;
+	}
+}
+
+
+void
+Queue_animal_shelter::print_queue()
+{
+	Node* tmp = queue;
+
+	while (tmp)
+	{
+		auto arrived = tmp->arrival;
+		if (tmp->dog && queue == tmp)
+			std::cout << "\n 1st -> " << "Animal: DOG\n\tArrival: " << arrived << "\n";
+		else if (tmp->dog)
+			std::cout << "\n\t" << "Animal: DOG\n\tArrival: " << arrived << "\n";
+		else if (!tmp->dog && queue == tmp)
+			std::cout << "\n 1st -> " << "Animal: CAT\n\tArrival: " << arrived << "\n";
+		else
+			std::cout << "\n\t" << "Animal: CAT\n\tArrival: " << arrived << "\n";
+
+		tmp = tmp->next;
+	}
+
+	std::cout << "\n\n";
+}
